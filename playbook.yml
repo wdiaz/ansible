@@ -1,0 +1,24 @@
+---
+- hosts: vb
+  tasks:
+    - ping: ~
+    
+    - name: Update apt repository cache
+      become: true
+      apt:
+          update_cache: true
+
+    - name: Upgade existing packages
+      become: true
+      apt:
+          upgrade: dist
+
+    - name: Installing Cowsay
+      become: true
+      apt:
+          name: cowsay
+
+    - name: Install Git
+      become: true
+      apt:
+          name: git
