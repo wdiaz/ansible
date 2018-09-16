@@ -1,5 +1,9 @@
 ---
 - hosts: vb
+  
+  vars:
+    symfony_root_dir: /var/www/knp_authentication
+  
   tasks:
 
     - ping: ~
@@ -18,6 +22,14 @@
       become: true
       apt:
           name: cowsay
+
+    - name: Install low level utilities
+      become: true
+      apt:
+        name: "{{ item }}"
+      with_items:
+          - zip
+          - unzip
 
     - name: Install Git
       become: true
@@ -63,3 +75,44 @@
           - php7.2-soap
           - php7.2-xsl
           - php7.2-zip
+    - name: Replacing PHP timezone
+      become: true
+      lineinfile:
+          dest: /etc/php/7.2/cli/php.ini
+          regexp: "date.timezone ="
+          line: "date.timezone = UTC"
+
+    - name: Creating Project Directory
+      become: true
+      file:
+          path: "{{ symfony_root_dir }}"
+          state: directory
+          owner: "{{ ansible_user }}"
+          group: "{{ ansible_user }}"
+          recurse: true
+
+    - name: Cloning Repository from Github
+      git:
+        repo: git@github.com:wdiaz/SymfonyAuthentication.git
+        dest: "{{ symfony_root_dir }}"
+        force: true
+
+    - name: Download Composer
+      script: scripts/download_composer.sh
+
+    - name: Move Composer Globally
+      become: true
+      command: "mv composer.phar /usr/local/bin/composer"
+
+    - name: Set permissions on composer
+      become: true
+      file:
+        path: /usr/local/bin/composer
+        mode: "a+x"
+
+    - name: Install Composer Dependencies
+      composer: 
+        working_dir: "{{ symfony_root_dir }}"
+        no_dev: no
+      tags:
+          - deploy
