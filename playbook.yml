@@ -134,6 +134,7 @@
 
 
     - name: Download Composer
+      become: true
       script: scripts/download_composer.sh
 
     - name: Move Composer Globally
