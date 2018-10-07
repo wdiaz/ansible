@@ -5,7 +5,9 @@
     symfony_root_dir: /var/www/html/knp_authentication
     server_name: security.local
     symfony_web_dir: "{{ symfony_root_dir }}/web"
-  
+    ansible_user: vagrant
+    ansible_group: vagrant
+
   tasks:
 
     - ping: ~
@@ -96,11 +98,40 @@
           group: "{{ ansible_user }}"
           recurse: true
 
+    - name: Copying local SSH key to guest
+      become: true
+      copy:
+        src: /Users/wdiaz/.ssh/id_rsa
+        dest: /home/vagrant/.ssh/id_rsa
+        owner: vagrant
+        group: vagrant
+        mode: 0600
+      tags:
+        - repo
+
     - name: Cloning Repository from Github
+      become: true
       git:
         repo: git@github.com:wdiaz/SymfonyAuthentication.git
         dest: "{{ symfony_root_dir }}"
+        key_file: /home/vagrant/.ssh/id_rsa
+        accept_hostkey: true
         force: true
+      tags:
+        - repo
+
+    - name: Change symfony Symfony Root directory permissions
+      become: true
+      file:
+        path: "{{ symfony_root_dir }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: 0750
+        recurse: true
+      tags:
+        - repo
+
 
     - name: Download Composer
       script: scripts/download_composer.sh
@@ -116,6 +147,7 @@
         mode: "a+x"
 
     - name: Install Composer Dependencies
+      become: true
       composer: 
         working_dir: "{{ symfony_root_dir }}"
         no_dev: no
