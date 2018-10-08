@@ -3,10 +3,14 @@
   
   vars:
     symfony_root_dir: /var/www/html/knp_authentication
-    server_name: security.local
     symfony_web_dir: "{{ symfony_root_dir }}/web"
     ansible_user: vagrant
     ansible_group: vagrant
+
+  roles:
+    - apache
+    - mysql
+    - composer
 
   tasks:
 
@@ -52,11 +56,6 @@
       apt:
           name: mysql-server
           state: latest
-
-    - name: Install Apache
-      become: true
-      apt:
-          name: apache2
 
     - name: Install PHP 7.2 and its Modules
       become: true
@@ -113,6 +112,7 @@
       become: true
       git:
         repo: git@github.com:wdiaz/SymfonyAuthentication.git
+        version: master
         dest: "{{ symfony_root_dir }}"
         key_file: /home/vagrant/.ssh/id_rsa
         accept_hostkey: true
@@ -147,34 +147,8 @@
         path: /usr/local/bin/composer
         mode: "a+x"
 
-    - name: Install Composer Dependencies
-      become: true
-      composer: 
-        working_dir: "{{ symfony_root_dir }}"
-        no_dev: no
-      tags:
-          - deploy
-
-    - name: Add symfony config file to apache sites available
-      become: true
-      template:
-          src: templates/symfony.conf
-          dest: /etc/apache2/sites-available/{{ server_name }}.conf
-
-    - name: Add Symfony config file to sites enabled
-      become: true
-      file:
-        src: /etc/apache2/sites-available/{{ server_name }}.conf
-        dest: /etc/apache2/sites-enabled/{{ server_name }}.conf
-        state: link
-      notify: Restart Apache2
-
-    - name: Add host entry in guest machine
-      become: true
-      lineinfile:
-        dest: /etc/hosts
-        regexp: "{{ server_name }}"
-        line: 127.0.0.1 {{ server_name }}
+    - name: enabled mod_rewrite
+      apache2_module: name=rewrite state=present
 
   handlers:
       - name: Restart Apache2
