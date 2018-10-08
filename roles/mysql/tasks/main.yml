@@ -1,0 +1,42 @@
+---
+- name: Install package
+  become: true
+  apt:
+      name: "{{ item }}"
+      state: latest
+  with_items:
+    - python-mysqldb
+    - mysql-server
+  tags:
+    - database
+
+- name: Move mysql file
+  become: true
+  template:
+    src: mysql.conf.d/mysqld.cnf
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+  notify: restart mysql
+  tags:
+    - database
+
+- name: Add my.cnf root info
+  become: true
+  template:
+    src: vagrant.my.cnf
+    dest: /home/vagrant/.my.cnf
+  notify: restart mysql
+  tags:
+    - database
+
+- name: Create External User
+  become: true
+  mysql_user: 
+    name: external
+    password: external 
+    host: '%'
+    priv: '*.*:ALL' 
+    login_user: root
+    state: present
+    check_implicit_admin: yes
+  tags:
+    - database
