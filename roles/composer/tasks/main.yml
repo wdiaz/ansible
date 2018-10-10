@@ -1,8 +1,0 @@
----
-- name: Install Composer Dependencies
-  become: true
-  composer: 
-    working_dir: "{{ symfony_root_dir }}"
-    no_dev: no
-  tags:
-      - deploy

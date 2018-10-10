@@ -8,9 +8,10 @@
     ansible_group: vagrant
 
   roles:
+    - java
+    - php
     - apache
     - mysql
-    - composer
 
   tasks:
 
@@ -45,48 +46,6 @@
       apt:
           name: git
           state: latest
-    
-    - name: Install PHP PPA Repository
-      become: true
-      apt_repository:
-          repo: 'ppa:ondrej/php'
-
-    - name: Install MySQL Server
-      become: true
-      apt:
-          name: mysql-server
-          state: latest
-
-    - name: Install PHP 7.2 and its Modules
-      become: true
-      apt:
-          name: "{{ item }}"
-          state: latest
-      with_items:
-          - php7.2-cli
-          - php7.2-mysql
-          - php7.2-curl
-          - php7.2-intl
-          - php7.2-ldap
-          - php7.2-gd
-          - php7.2-opcache
-          - php7.2-common
-          - php7.2-xml
-          - php7.2-xmlrpc
-          - php7.2-bcmath
-          - php7.2-bz2
-          - php7.2-mbstring
-          - php7.2-soap
-          - php7.2-xsl
-          - php7.2-zip
-          - libapache2-mod-php7.2
-
-    - name: Replacing PHP timezone
-      become: true
-      lineinfile:
-          dest: /etc/php/7.2/cli/php.ini
-          regexp: "date.timezone ="
-          line: "date.timezone = UTC"
 
     - name: Creating Project Directory
       become: true
@@ -100,13 +59,13 @@
     - name: Copying local SSH key to guest
       become: true
       copy:
-        src: /Users/wdiaz/.ssh/id_rsa
+        src: /home/wdiaz/.ssh/id_rsa
         dest: /home/vagrant/.ssh/id_rsa
         owner: vagrant
         group: vagrant
         mode: 0600
       tags:
-        - repo
+        - ssh
 
     - name: Cloning Repository from Github
       become: true
@@ -132,7 +91,6 @@
       tags:
         - repo
 
-
     - name: Download Composer
       become: true
       script: scripts/download_composer.sh
@@ -147,8 +105,13 @@
         path: /usr/local/bin/composer
         mode: "a+x"
 
-    - name: enabled mod_rewrite
-      apache2_module: name=rewrite state=present
+    - name: Install Composer Dependencies
+      become: true
+      composer: 
+        working_dir: "{{ symfony_root_dir }}"
+        no_dev: no
+      tags:
+          - deploy
 
   handlers:
       - name: Restart Apache2

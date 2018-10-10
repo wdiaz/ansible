@@ -27,3 +27,7 @@
     dest: /etc/apache2/sites-enabled/{{ server_name }}.conf
     state: link
   notify: Restart Apache2
+
+- name: enabled mod_rewrite
+  become: true
+  apache2_module: name=rewrite state=present

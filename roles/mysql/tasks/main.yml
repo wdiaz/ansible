@@ -40,3 +40,28 @@
     check_implicit_admin: yes
   tags:
     - database
+- name: Create Root User
+  become: true
+  mysql_user: 
+    name: root
+    password: root 
+    host: '%'
+    priv: '*.*:ALL' 
+    login_user: root
+    state: present
+    check_implicit_admin: yes
+  tags:
+    - database
+
+- name: Create Vagrant User
+  become: true
+  mysql_user: 
+    name: vagrant
+    password: vagrant 
+    host: '%'
+    priv: '*.*:ALL' 
+    login_user: root
+    state: present
+    check_implicit_admin: yes
+  tags:
+    - database
