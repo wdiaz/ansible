@@ -8,7 +8,6 @@
     ansible_group: vagrant
 
   roles:
-    - java
     - php
     - apache
     - mysql
