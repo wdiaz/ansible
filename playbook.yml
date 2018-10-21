@@ -56,7 +56,7 @@
           group: "{{ ansible_user }}"
           recurse: true
 
-    - name: Copying local SSH key to guest
+    - name: Copying local private SSH key to guest
       become: true
       copy:
         src: /home/wdiaz/.ssh/id_rsa
@@ -64,6 +64,17 @@
         owner: vagrant
         group: vagrant
         mode: 0600
+      tags:
+        - ssh
+
+    - name: Copying local public SSH key to guest
+      become: true
+      copy:
+        src: /home/wdiaz/.ssh/id_rsa.pub
+        dest: /home/vagrant/.ssh/id_rsa.pub
+        owner: vagrant
+        group: vagrant
+        mode: 0644
       tags:
         - ssh
 

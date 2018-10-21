@@ -35,7 +35,7 @@
     password: external 
     host: '%'
     priv: '*.*:ALL' 
-    login_user: root
+    login_user: external
     state: present
     check_implicit_admin: yes
   tags:
@@ -46,7 +46,7 @@
     name: root
     password: root 
     host: '%'
-    priv: '*.*:ALL' 
+    priv: '*.*:ALL,GRANT'
     login_user: root
     state: present
     check_implicit_admin: yes
@@ -59,8 +59,8 @@
     name: vagrant
     password: vagrant 
     host: '%'
-    priv: '*.*:ALL' 
-    login_user: root
+    priv: '*.*:ALL,GRANT'
+    login_user: vagrant
     state: present
     check_implicit_admin: yes
   tags:
