@@ -4,6 +4,7 @@
   vars:
     symfony_root_dir: /var/www/html/knp_authentication
     symfony_web_dir: "{{ symfony_root_dir }}/web"
+    home_root: "/var/www/html"
     ansible_user: vagrant
     ansible_group: vagrant
 
@@ -77,12 +78,36 @@
       tags:
         - ssh
 
-    - name: Cloning Repository from Github
+    - name: Cloning SF Authentication Repository from Github
       become: true
       git:
         repo: git@github.com:wdiaz/SymfonyAuthentication.git
         version: master
         dest: "{{ symfony_root_dir }}"
+        key_file: /home/vagrant/.ssh/id_rsa
+        accept_hostkey: true
+        force: true
+      tags:
+        - repo
+
+    - name: Cloning Reusable Bundle Repository from Github
+      become: true
+      git:
+        repo: git@github.com:wdiaz/Reusable-Bundles.git
+        version: master
+        dest: "{{ home_root }}/Reusable-Bundles"
+        key_file: /home/vagrant/.ssh/id_rsa
+        accept_hostkey: true
+        force: true
+      tags:
+        - repo
+
+    - name: Cloning LoremIpsum Bundle Repository from Github
+      become: true
+      git:
+        repo: git@github.com:wdiaz/LoremIpsumBundle.git
+        version: master
+        dest: "{{ home_root }}/LoremIpsumBundle"
         key_file: /home/vagrant/.ssh/id_rsa
         accept_hostkey: true
         force: true
