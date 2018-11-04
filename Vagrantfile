@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   config.vm.synced_folder "websites", "/var/www/html", id: "web", create: true, group: "www-data", owner: "vagrant"
-  config.vm.synced_folder "home", "/home/vagrant", id: "home", create: true, group: "vagrant", owner: "vagrant"
+  config.vm.synced_folder "home", "/home/vagrant/projects", id: "projects", create: true, group: "vagrant", owner: "vagrant"
   #config.vm.synced_folder "home", "/home/vagrant/projects", create: true, group: "root", owner: "root"
 
   # Provider-specific configuration so you can fine-tune various
