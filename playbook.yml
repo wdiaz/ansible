@@ -117,9 +117,9 @@
     - name: Cloning knp_js1 Repository from Github
       become: true
       git:
-        repo: git@github.com:wdiaz/KnpJs1.git
+        repo: git@github.com:wdiaz/knp_js1.git
         version: master
-        dest: "{{ home_root }}/knp_js1"
+        dest: "{{ home_root }}/KnpJs1"
         key_file: /home/vagrant/.ssh/id_rsa
         accept_hostkey: true
         force: true
