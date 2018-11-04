@@ -117,7 +117,7 @@
     - name: Cloning knp_js1 Repository from Github
       become: true
       git:
-        repo: git@github.com:wdiaz/knp_js1.git
+        repo: git@github.com:wdiaz/KnpJs1.git
         version: master
         dest: "{{ home_root }}/knp_js1"
         key_file: /home/vagrant/.ssh/id_rsa
@@ -131,7 +131,7 @@
       git:
         repo: git@github.com:wdiaz/sf4.git
         version: master
-        dest: "{{ home_root }}/sf4"
+        dest: "{{ home_root }}/Symfony4"
         key_file: /home/vagrant/.ssh/id_rsa
         accept_hostkey: true
         force: true
@@ -144,7 +144,7 @@
       git:
         repo: git@github.com:wdiaz/drupal8.git
         version: master
-        dest: "{{ home_root }}/drupal"
+        dest: "{{ home_root }}/Drupal"
         key_file: /home/vagrant/.ssh/id_rsa
         accept_hostkey: true
         force: true
