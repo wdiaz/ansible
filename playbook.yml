@@ -95,7 +95,7 @@
       git:
         repo: git@github.com:wdiaz/Reusable-Bundles.git
         version: master
-        dest: "{{ home_root }}/Reusable-Bundles"
+        dest: "{{ home_root }}/ReusableBundles"
         key_file: /home/vagrant/.ssh/id_rsa
         accept_hostkey: true
         force: true
@@ -114,12 +114,49 @@
       tags:
         - repo
 
+    - name: Cloning knp_js1 Repository from Github
+      become: true
+      git:
+        repo: git@github.com:wdiaz/knp_js1.git
+        version: master
+        dest: "{{ home_root }}/knp_js1"
+        key_file: /home/vagrant/.ssh/id_rsa
+        accept_hostkey: true
+        force: true
+      tags:
+        - repo
+
+    - name: Cloning sf4 Repository from Github
+      become: true
+      git:
+        repo: git@github.com:wdiaz/sf4.git
+        version: master
+        dest: "{{ home_root }}/sf4"
+        key_file: /home/vagrant/.ssh/id_rsa
+        accept_hostkey: true
+        force: true
+      tags:
+        - repo
+
+
+    - name: Cloning Drupal Repository from Github
+      become: true
+      git:
+        repo: git@github.com:wdiaz/drupal8.git
+        version: master
+        dest: "{{ home_root }}/drupal"
+        key_file: /home/vagrant/.ssh/id_rsa
+        accept_hostkey: true
+        force: true
+      tags:
+        - repo
+
     - name: Change symfony Symfony Root directory permissions
       become: true
       file:
         path: "{{ symfony_root_dir }}"
         state: directory
-        owner: www-data
+        owner: vagrant
         group: www-data
         mode: 0750
         recurse: true
