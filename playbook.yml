@@ -138,13 +138,12 @@
       tags:
         - repo
 
-
-    - name: Cloning Drupal Repository from Github
+    - name: Cloning SfReactJs Repository from Github
       become: true
       git:
-        repo: git@github.com:wdiaz/drupal8.git
+        repo: git@github.com:wdiaz/SfReactJs.git
         version: master
-        dest: "{{ home_root }}/Drupal"
+        dest: "{{ home_root }}/SfReactJs"
         key_file: /home/vagrant/.ssh/id_rsa
         accept_hostkey: true
         force: true
