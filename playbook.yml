@@ -59,7 +59,7 @@
     - name: Copying local private SSH key to guest
       become: true
       copy:
-        src: /home/wdiaz/.ssh/id_rsa
+        src: /Users/wdiaz/.ssh/id_rsa
         dest: /home/vagrant/.ssh/id_rsa
         owner: vagrant
         group: vagrant
@@ -70,97 +70,13 @@
     - name: Copying local public SSH key to guest
       become: true
       copy:
-        src: /home/wdiaz/.ssh/id_rsa.pub
+        src: /Users/wdiaz/.ssh/id_rsa.pub
         dest: /home/vagrant/.ssh/id_rsa.pub
         owner: vagrant
         group: vagrant
         mode: 0644
       tags:
         - ssh
-
-    - name: Cloning SF Authentication Repository from Github
-      become: true
-      git:
-        repo: git@github.com:wdiaz/SymfonyAuthentication.git
-        version: master
-        dest: "{{ symfony_root_dir }}"
-        key_file: /home/vagrant/.ssh/id_rsa
-        accept_hostkey: true
-        force: true
-      tags:
-        - repo
-
-    - name: Cloning Reusable Bundle Repository from Github
-      become: true
-      git:
-        repo: git@github.com:wdiaz/Reusable-Bundles.git
-        version: master
-        dest: "{{ home_root }}/ReusableBundles"
-        key_file: /home/vagrant/.ssh/id_rsa
-        accept_hostkey: true
-        force: true
-      tags:
-        - repo
-
-    - name: Cloning LoremIpsum Bundle Repository from Github
-      become: true
-      git:
-        repo: git@github.com:wdiaz/LoremIpsumBundle.git
-        version: master
-        dest: "{{ home_root }}/LoremIpsumBundle"
-        key_file: /home/vagrant/.ssh/id_rsa
-        accept_hostkey: true
-        force: true
-      tags:
-        - repo
-
-    - name: Cloning knp_js1 Repository from Github
-      become: true
-      git:
-        repo: git@github.com:wdiaz/knp_js1.git
-        version: master
-        dest: "{{ home_root }}/KnpJs1"
-        key_file: /home/vagrant/.ssh/id_rsa
-        accept_hostkey: true
-        force: true
-      tags:
-        - repo
-
-    - name: Cloning sf4 Repository from Github
-      become: true
-      git:
-        repo: git@github.com:wdiaz/sf4.git
-        version: master
-        dest: "{{ home_root }}/Symfony4"
-        key_file: /home/vagrant/.ssh/id_rsa
-        accept_hostkey: true
-        force: true
-      tags:
-        - repo
-
-    - name: Cloning SfReactJs Repository from Github
-      become: true
-      git:
-        repo: git@github.com:wdiaz/SfReactJs.git
-        version: master
-        dest: "{{ home_root }}/SfReactJs"
-        key_file: /home/vagrant/.ssh/id_rsa
-        accept_hostkey: true
-        force: true
-      tags:
-        - repo
-
-    - name: Change symfony Symfony Root directory permissions
-      become: true
-      file:
-        path: "{{ symfony_root_dir }}"
-        state: directory
-        owner: vagrant
-        group: www-data
-        mode: 0750
-        recurse: true
-      tags:
-        - repo
 
     - name: Download Composer
       become: true
@@ -176,13 +92,6 @@
         path: /usr/local/bin/composer
         mode: "a+x"
 
-    - name: Install Composer Dependencies
-      become: true
-      composer: 
-        working_dir: "{{ symfony_root_dir }}"
-        no_dev: no
-      tags:
-          - deploy
 
   handlers:
       - name: Restart Apache2
